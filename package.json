@@ -1,12 +1,19 @@
 {
-  "name": "mark2ubb",
-  "version": "1.0.0",
+  "name": "@whyun-master/mark-cli",
+  "version": "0.1.0",
   "description": "",
   "bin": {
-    "mark2ubb": "./src/cli.mjs"
+    "mark2ubb": "./src/mark2ubb-cli.mjs",
+    "mdd": "./src/mdd-cli.mjs"
   },
   "scripts": {
-    "demo": "node src/cli.mjs ./test/fixtures/demo.md --image-base-url https://example.com/"
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest --coverage",
+    "test:ci": "vitest --ci --coverage --watchAll=false",
+    "test:mdd": "vitest ./test/mdd.test.mjs",
+    "demo": "node src/cli.mjs ./test/fixtures/demo.md --image-base-url https://example.com/",
+    "demo:mdd": "node src/mdd-cli.mjs ./test/fixtures/demo.md --image-base-url https://example.com/ --math2png"
   },
   "keywords": [],
   "author": "",

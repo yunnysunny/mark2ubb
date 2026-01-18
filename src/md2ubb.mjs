@@ -1,5 +1,6 @@
 import MarkdownIt from 'markdown-it'
 import mathjax3 from 'markdown-it-mathjax3'
+import { mathToPng } from './lib/math-to-image.mjs'
 
 const md = new MarkdownIt({
   html: false,
@@ -78,8 +79,11 @@ function renderInline(tokens, options = {}) {
       case 'hardbreak':
         result += '\n'
         break
-
+      case 'math_inline':
+        result += `[img]${mathToPng(token.content)}[/img]`
+        break
       default:
+        console.warn(`Unsupported inline token type: ${token.type}`)
         if (token.children) {
           result += renderInline(token.children)
         }
@@ -204,12 +208,10 @@ export function markdownToUBB(markdown, options = {}) {
         output += '[/td]'
         break
       // ---------- math ----------
-      case 'math_inline':
-        output += `[math]${token.content}[/math]`
-        break
+
 
       case 'math_block':
-        output += `[math]\n${token.content}\n[/math]\n\n`
+        output += `[img]\n${mathToPng(token.content)}\n[/img]\n\n`
         break
       // =====================
       // inline 内容
@@ -229,25 +231,3 @@ export function markdownToUBB(markdown, options = {}) {
   return output.trim()
 }
 
-// // CLI
-// if (require.main === module) {
-//   const fs = require('fs')
-//   const input = process.argv[2]
-//   const output = process.argv[3]
-
-//   if (!input) {
-//     console.error('Usage: node md-it-to-ubb.js input.md [output.ubb]')
-//     process.exit(1)
-//   }
-
-//   const mdText = fs.readFileSync(input, 'utf8')
-//   const ubb = markdownToUBB(mdText)
-
-//   if (output) {
-//     fs.writeFileSync(output, ubb)
-//   } else {
-//     console.log(ubb)
-//   }
-// }
-
-// module.exports = markdownToUBB

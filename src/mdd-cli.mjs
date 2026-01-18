@@ -2,16 +2,17 @@
 
 import fs from 'fs'
 import { Command } from 'commander'
-import { markdownToUBB } from './index.mjs'
+import { transform } from './mdd.mjs'
 
 const program = new Command()
 
 program
-  .name('md2ubb')
+  .name('mdd')
   .argument('<file>', 'markdown file')
   .option('-o, --output <file>', 'output file')
   .option('-u, --image-base-url <url>', 'base URL for relative images')
-  .option('-k, --upload-key <key>', '[imageride] upload key for image hosting service')
+  .option('-p, --math2png', 'convert math to PNG images', false)
+  // .option('-k, --upload-key <key>', '[imageride] upload key for image hosting service')
 
 program.parse()
 
@@ -21,9 +22,9 @@ const opts = program.opts()
 const output = opts.output
 
 const md = fs.readFileSync(input, 'utf8')
-const ubb = markdownToUBB(md, {
+const ubb = transform(md, {
     relativeImageBaseUrl: opts.imageBaseUrl,
-    uploadKey: opts.uploadKey,
+    math2Png: opts.math2png,
 })
 
 if (output) {
